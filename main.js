@@ -16,7 +16,7 @@ async function login(user) {
 let user = JSON.parse(localStorage.getItem('user'));
 let usuingINfo = JSON.parse(localStorage.getItem('usuingINfo')) || false;
 if (!usuingINfo) {
-   await login(user);
+   login(user);
    usuingINfo = true;
    localStorage.setItem("usuingINfo", JSON.stringify(usuingINfo));
 }
@@ -24,36 +24,38 @@ if (!usuingINfo) {
 let swiper_wrapper = document.querySelector('.swiper-wrapper');
 let cardConrtainer = document.querySelector('.popular-section__wrapper');
 let popular_section = document.querySelector('.popular-section');
-let korzina_data =  JSON.parse(localStorage.getItem('korzina_data')) || [];
-let like_data =  JSON.parse(localStorage.getItem('like_data')) || [];
+let korzina_data = JSON.parse(localStorage.getItem('korzina_data')) || [];
+let like_data = JSON.parse(localStorage.getItem('like_data')) || [];
 reload_to_numder(like_data, '.saveds__count');
 reload_to_numder(korzina_data, '.shop__counter');
 let res;
-await request("/goods", "get")
-   .then(data => res = data);
-sections_reload(res)
-cardReload(res.slice(0, 15), true, cardConrtainer)
-swiper_reload(res.slice(20, 30), swiper_wrapper)
-
-
-let lengthBtn = document.createElement('button')
-lengthBtn.classList.add('btn-reload')
-lengthBtn.innerHTML = 'Показать все'
-popular_section.append(lengthBtn)
-lengthBtn.dataset.st = true;
-lengthBtn.onclick = () => {
-   if (lengthBtn.dataset.st !== 'false') {
-
-      cardReload(res, true, cardConrtainer)
-      lengthBtn.dataset.st = false;
-      lengthBtn.innerHTML = 'Скрыть'
-
-   } else {
+ request("/goods", "get")
+   .then(data => res = data)
+   .then(() => {
+      sections_reload(res)
       cardReload(res.slice(0, 15), true, cardConrtainer)
-      lengthBtn.dataset.st = true;
+      swiper_reload(res.slice(20, 30), swiper_wrapper)
+
+
+      let lengthBtn = document.createElement('button')
+      lengthBtn.classList.add('btn-reload')
       lengthBtn.innerHTML = 'Показать все'
-   }
+      popular_section.append(lengthBtn)
+      lengthBtn.dataset.st = true;
+      lengthBtn.onclick = () => {
+         if (lengthBtn.dataset.st !== 'false') {
 
-}
+            cardReload(res, true, cardConrtainer)
+            lengthBtn.dataset.st = false;
+            lengthBtn.innerHTML = 'Скрыть'
 
-footer()
+         } else {
+            cardReload(res.slice(0, 15), true, cardConrtainer)
+            lengthBtn.dataset.st = true;
+            lengthBtn.innerHTML = 'Показать все'
+         }
+
+      }
+
+      footer()
+   })
