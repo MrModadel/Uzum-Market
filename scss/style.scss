@@ -434,9 +434,12 @@ h6 {
 
    &__shop {
       cursor: pointer;
-
       &:active {
          scale: 1.2;
+      }
+      img{
+         width:100%;
+         height: 100%;
       }
    }
 }
